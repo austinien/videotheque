@@ -77,7 +77,7 @@
   <label for="membre">Qui regarde ?</label>
 
   <select id="membre">
-    <option value="Tom">Tom</option>
+    <option>Chargement...</option>
   </select>
 
   <label for="demande">Que veux-tu regarder ?</label>
@@ -103,6 +103,47 @@
     const bouton = document.getElementById("chercher");
     const resultat = document.getElementById("resultat");
     const chargement = document.getElementById("chargement");
+    const urlMembres = "https://hook.eu1.make.com/jqgtzjsbcisjrhhgh65jbesx47pfsedk";
+
+async function chargerMembres() {
+  try {
+    const reponse = await fetch(urlMembres);
+
+    if (!reponse.ok) {
+      throw new Error("Erreur Make : " + reponse.status);
+    }
+
+    const membres = await reponse.json();
+
+    membre.innerHTML = "";
+
+    membres.forEach(personne => {
+      const option = document.createElement("option");
+      option.value = personne["Prénom"];
+      option.textContent = personne["Prénom"];
+      membre.appendChild(option);
+    });
+
+    const membreSauve = localStorage.getItem("membre");
+
+    if (
+      membreSauve &&
+      [...membre.options].some(option => option.value === membreSauve)
+    ) {
+      membre.value = membreSauve;
+    } else if (membre.options.length > 0) {
+      localStorage.setItem("membre", membre.value);
+    }
+
+  } catch (erreur) {
+    membre.innerHTML = "";
+    const option = document.createElement("option");
+    option.textContent = "Impossible de charger les membres";
+    membre.appendChild(option);
+  }
+}
+
+chargerMembres();
 
     // Mémorise le membre choisi sur ce téléphone
     const membreSauve = localStorage.getItem("membre");
