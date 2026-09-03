@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Vidéothèque</title>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 24px;
+      background: #111;
+      color: #eee;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    select,
+    textarea,
+    button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    select,
+    textarea {
+      background: #222;
+      color: white;
+      border: 1px solid #444;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      border: 0;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    #resultat {
+      margin-top: 30px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    #chargement {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎬 Ma Vidéothèque</h1>
+
+  <label for="membre">Qui regarde ?</label>
+
+  <select id="membre">
+    <option value="Tom">Tom</option>
+  </select>
+
+  <label for="demande">Que veux-tu regarder ?</label>
+
+  <textarea
+    id="demande"
+    placeholder="Ex. Un film sombre et prenant, pas trop long..."
+  ></textarea>
+
+  <button id="chercher">
+    Trouve-moi un film
+  </button>
+
+  <div id="chargement">
+    Je cherche dans la vidéothèque…
+  </div>
+
+  <div id="resultat"></div>
+
+  <script>
+    const membre = document.getElementById("membre");
+    const demande = document.getElementById("demande");
+    const bouton = document.getElementById("chercher");
+    const resultat = document.getElementById("resultat");
+    const chargement = document.getElementById("chargement");
+
+    // Mémorise le membre choisi sur ce téléphone
+    const membreSauve = localStorage.getItem("membre");
+
+    if (membreSauve) {
+      membre.value = membreSauve;
+    }
+
+    membre.addEventListener("change", () => {
+      localStorage.setItem("membre", membre.value);
+    });
+
+    bouton.addEventListener("click", async () => {
+      const texte = demande.value.trim();
+
+      if (!texte) {
+        resultat.textContent = "Dis-moi d'abord ce que tu as envie de regarder 🙂";
+        return;
+      }
+
+      localStorage.setItem("membre", membre.value);
+
+      resultat.textContent = "";
+      chargement.style.display = "block";
+      bouton.disabled = true;
+
+      try {
+        /*
+          On branchera ton webhook Make ici
+          à l'étape suivante.
+        */
+
+        resultat.textContent =
+          "Connexion à la vidéothèque prête 🎬";
+
+      } catch (erreur) {
+        resultat.textContent =
+          "Impossible de contacter la vidéothèque.";
+      } finally {
+        chargement.style.display = "none";
+        bouton.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>
