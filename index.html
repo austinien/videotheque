@@ -130,10 +130,22 @@
       bouton.disabled = true;
 
       try {
-        /*
-          On branchera ton webhook Make ici
-          à l'étape suivante.
-        */
+      const urlWebhook = "https://hook.eu1.make.com/63w2c3xxbzjpnxi9snbu7yde66cg31vj";
+
+      const url =
+        urlWebhook +
+        "?membre=" + encodeURIComponent(membre.value) +
+        "&demande=" + encodeURIComponent(texte);
+
+      const reponse = await fetch(url);
+      
+      if (!reponse.ok) {
+        throw new Error("Erreur Make : " + reponse.status);
+      }
+      
+      const texteReponse = await reponse.text();
+      
+      resultat.textContent = texteReponse;
 
         resultat.textContent =
           "Connexion à la vidéothèque prête 🎬";
